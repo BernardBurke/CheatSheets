@@ -1,0 +1,2 @@
+sed -i 's/d:/\/mnt\/d/g' /mnt/d/edlv2/metadata/handmade/windows/myown.m3u
+ sed 's/\\/\//g'
