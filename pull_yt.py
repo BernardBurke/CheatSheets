@@ -27,7 +27,7 @@ def get_via_yt_dlp(url):
 
     with yt_dlp.YoutubeDL(ytdl_opts) as ytdl:
         ytdl.download([url])
-        print(f'{ytdl.entries[0].title} downloaded to {tempfile.gettempdir()}')
+        #print(f'{ytdl.entries[0].title} downloaded to {tempfile.gettempdir()}')
 
 
 def get_via_pytube(url, itag):
