@@ -83,8 +83,11 @@ print(f'took {toc - tic:0.4f} seconds')
 
 print(f'{f_filename} was downloaded')
 probe = ffmpeg.probe(f_filename)
-audio_stream = next((stream for stream in probe['streams'] if stream['codec_type'] == 'audio'), None)
+audio_stream = next((stream['codec_name'] for stream in probe['streams'] if stream['codec_type'] == 'audio'), None)
 print(audio_stream)
+input = ffmpeg.input(f_filename)
+audio = input.audio.acodec(audio_stream)
+output = ffmpeg.output(audio,'fred.aac')
 
 # we'll make this smarter eventually with itags that might very from 22
 
