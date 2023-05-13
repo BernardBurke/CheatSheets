@@ -1,0 +1,3 @@
+select  'yt-dlp "'|| REPLACE(enclosure_url,'|',' ')||' -o '||'"'||REPLACE(title,'''','')||'.mp3"' from rss_item;
+select  'yt-dlp "'|| REPLACE(enclosure_url,'|',' ')||' -o '||'"'||REPLACE(REPLACE(title,'''',''),',','')||'.mp3"' from rss_item;
+select  'yt-dlp "'|| REPLACE(enclosure_url,'|',' ')||'" -o '||'"'||REPLACE(REPLACE(title,'''',''),',','')||'.mp3"' from rss_item;
