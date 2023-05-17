@@ -7,7 +7,7 @@ jq  -r '.entries[] | .displayTitles.double.title, .displayTitles.double.subtitle
 #cat $TMP2
 while IFS= read title; read episode; read link
 do 
-	if fgrep -qix -- "$title" <<< "$1"; then
+	if [[ "$title" == "$1" ]]; then
 		echo yt-dlp -o \"${title} ${episode}.mp4\" http://www.sbs.com.au/ondemand/video/${link##*/}
 	fi
 	#echo "${episode}"
