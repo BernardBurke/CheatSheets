@@ -1,0 +1,1 @@
+export FRED="$(echo "$FRED" | sed "s/\[/\\\[/g" | sed "s/\]/\\\]/g")"
