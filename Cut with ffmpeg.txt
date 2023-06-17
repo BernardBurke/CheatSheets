@@ -1,0 +1,4 @@
+ffmpeg -ss 00:05:20 -i input.mp4 -t 00:10:00 -c:v copy -c:a copy output3.mp4
+ffmpeg -ss 00:05:20 -i input.mp4 -to 00:10:00 -c:v copy -c:a copy output4.mp4
+ffmpeg -sseof -600 -i input.mp4 -c copy output5.mp4
+ffmpeg -sseof -00:10:00 -i input.mp4 -c copy output6.mp4
