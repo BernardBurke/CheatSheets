@@ -1,0 +1,1 @@
+sed -r '/^[0-9]+$/{N;d}' subtitles.srt > outfile
