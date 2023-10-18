@@ -1,0 +1,2 @@
+ffmpeg -ss 0.1 -t 14 -i evey.mp4 -vf scale=480:-1 -r 10 -f image2pipe -vcodec ppm - | convert -delay 10 -loop 0 - evey.gif
+
