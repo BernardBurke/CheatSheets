@@ -5,7 +5,7 @@ if [[ ! -f "$1" ]];  then
     exit 0
 fi
 
-FILESPEC="$(basename $1)"
+FILESPEC="$(basename "$1")"
 OUTPUT_FILE="${FILESPEC%.*}"
 OUTPUT_PATH="/tmp/$OUTPUT_FILE.x265.mkv"
 
