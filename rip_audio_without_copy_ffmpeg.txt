@@ -1,0 +1,6 @@
+for file in ~/shome/Drive/ListeningPost2/integral/integral-naked*.mkv 
+do 
+	nam="$(basename "$file")"
+	nam="${nam}.aac"
+	ffmpeg -i "$file" -q:a 0 -map a "$nam"
+done

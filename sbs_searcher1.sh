@@ -2,7 +2,7 @@
 TMP1=$(mktemp) 
 TMP2=$(mktemp)
 # pull the json matching $1 - I've found the &q= to not be very reliable, so we grab 500 chunks here
-wget -q "https://www.sbs.com.au/api/video_feed/f/Bgtm9B/sbs-section-programs?form=json&q=$1&range=1-500" -O $TMP1 
+wget -q "https://www.sbs.com.au/api/video_feed/f/Bgtm9B/sbs-section-programs?form=json&q=$1&range=1-1000" -O $TMP1 
 # use json query to match the id, title and subtitles
 jq  -r '.entries[] | .displayTitles.double.title, .displayTitles.double.subtitle, .id' $TMP1    > $TMP2
 # then loop through the results for title episode and the full link
