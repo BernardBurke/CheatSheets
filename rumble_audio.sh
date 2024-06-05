@@ -5,22 +5,11 @@ if [[ "$1" == "" ]]; then
   exit 1
 fi
 
-# Temporary file for output filename
-tmp_filename=$(mktemp)
-
 # Get video info in JSON format
 video_info=$(yt-dlp -j "$1")
 
-# Extract filename from JSON (prioritizing formats as before)
-filename=$(echo "$video_info" | jq -r '.formats[] | select(.ext == "mp4" and (.acodec == "aac" or .acodec == "opus")) | .url' | head -n 1 | sed 's#.*/##') 
-
-# Fallback to combined format if no match
-if [[ -z "$filename" ]]; then
-    filename=$(echo "$video_info" | jq -r '.formats[] | select(.ext == "mp4") | .url' | head -n 1 | sed 's#.*/##')
-fi
-
-# Clean up filename
-filename_clean=$(echo "$filename" | tr -dc '[:alnum:]_. -')
+# Extract title and clean it
+filename_clean=$(echo "$video_info" | jq -r '.title' | tr -dc '[:alnum:]_. -')
 
 # Download the video
 yt-dlp -S '+size,+br' -o "$filename_clean.mp4" "$1"
@@ -38,6 +27,5 @@ esac
 # Extract audio
 ffmpeg -i "$filename_clean.mp4" -vn -acodec copy "$filename_clean.$audio_ext"
 
-# Clean up temporary file
-rm "$tmp_filename"
+echo "Extracted these $filename_clean.mp4 and $filename_clean.$audio_ext "
 
