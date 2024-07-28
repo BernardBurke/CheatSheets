@@ -12,7 +12,7 @@ if [[ ! -d $YTsmall ]]; then
 fi
 
 export BHCU=$YTsmall
-echo "BHCU: $BHCU
+echo "BHCU: $BHCU"
 # Get video info in JSON format
 video_info=$(yt-dlp -j "$1")
 
