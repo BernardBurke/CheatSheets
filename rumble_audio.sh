@@ -5,6 +5,14 @@ if [[ "$1" == "" ]]; then
   exit 1
 fi
 
+# if the $1 is a file, then read the file and download the videos
+if [[ -f "$1" ]]; then
+  while IFS= read -r line; do
+    bash $0 "$line"
+  done < "$1"
+  exit 0
+fi
+
 # Get video info in JSON format
 video_info=$(yt-dlp -j "$1")
 
@@ -25,7 +33,11 @@ case "$audio_codec" in
 esac
 
 # Extract audio
-ffmpeg -i "$filename_clean.mp4" -vn -acodec copy "$filename_clean.$audio_ext"
+ffmpeg -i "$filename_clean.mp4" -vn -acodec copy "$Poddle/rumble/$filename_clean.$audio_ext"
 
-echo "Extracted these $filename_clean.mp4 and $filename_clean.$audio_ext "
+detox -v "$Poddle/rumble/$filename_clean.$audio_ext"
+# Move video to /tmp
+mv "$Poddle/rumble/$filename_clean.mp4" /tmp -v
+
+echo "Extracted these $filename_clean.mp4 and $filename_clean.$audio_ext and moved the video to /tmp"
 
