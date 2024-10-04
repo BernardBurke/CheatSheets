@@ -5,11 +5,40 @@ if [[ "$1" == "" ]]; then
   exit 1
 fi
 
+get_uploader() {
+
+	youtube_url="$1"
+
+	# Get video info in JSON format
+	video_info=$(yt-dlp -j "$youtube_url")
+
+	# Extract and print uploader
+	uploader=$(echo "$video_info" | jq -r '.uploader')
+
+	uploader=$(echo "$uploader" | sed -e 's/[ &[:punct:]]/_/g' -e 's/[^[:alnum:]_]//g') 
+
+	if [[ -z "$uploader" ]]; then
+		echo ""	
+	else
+		echo "$uploader"
+	fi
+}
+
+
+# Get uploader
+uploader=$(get_uploader "$1")
+
+
+
 # Get video info in JSON format
 video_info=$(yt-dlp -j "$1")
 
-# Extract title and clean it
-filename_clean=$(echo "$video_info" | jq -r '.title' | tr -dc '[:alnum:]_. -')
+
+filename_clean=$(echo "$video_info" | jq -r '.title' | sed -e 's/[^[:alnum:]]/_/g')
+filename_clean=$(echo "$video_info" | jq -r '.title' | sed -e 's/[^[:alnum:]]/_/g')
+filename_clean="${Poddle}/${uploader}/${filename_clean}"
+
+echo $filename_clean
 
 # Download the video
 yt-dlp -S '+size,+br' -o "$filename_clean.mp4" "$1"
