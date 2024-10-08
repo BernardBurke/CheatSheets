@@ -36,15 +36,20 @@ video_info=$(yt-dlp -j "$1")
 
 filename_clean=$(echo "$video_info" | jq -r '.title' | sed -e 's/[^[:alnum:]]/_/g')
 filename_clean=$(echo "$video_info" | jq -r '.title' | sed -e 's/[^[:alnum:]]/_/g')
+video_filename="${YTsmall}/${filename_clean}.mp4"
 filename_clean="${Poddle}/${uploader}/${filename_clean}"
+
+if [[ ! -d "${Poddle}/${uploader}" ]]; then
+	mkdir "${Poddle}/${uploader}"
+fi
 
 echo $filename_clean
 
 # Download the video
-yt-dlp -S '+size,+br' -o "$filename_clean.mp4" "$1"
+yt-dlp -S '+size,+br' -o "$video_filename" "$1"
 
 # Probe audio codec
-audio_codec=$(ffprobe -v error -select_streams a:0 -show_entries stream=codec_name -of default=noprint_wrappers=1:nokey=1 "$filename_clean.mp4")
+audio_codec=$(ffprobe -v error -select_streams a:0 -show_entries stream=codec_name -of default=noprint_wrappers=1:nokey=1 "$video_filename")
 
 # Determine audio extension
 case "$audio_codec" in
@@ -54,7 +59,7 @@ case "$audio_codec" in
 esac
 
 # Extract audio
-ffmpeg -i "$filename_clean.mp4" -vn -acodec copy "$filename_clean.$audio_ext"
+ffmpeg -i "$video_filename" -vn -acodec copy "$filename_clean.$audio_ext"
 
 echo "Extracted these $filename_clean.mp4 and $filename_clean.$audio_ext "
 
