@@ -1,0 +1,1 @@
+ yt-dlp -o "%(title)s-%(id)s.%(ext)s" https://www..... o --cookies-from-browser firefox

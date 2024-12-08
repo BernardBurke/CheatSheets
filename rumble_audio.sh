@@ -13,17 +13,50 @@ if [[ -f "$1" ]]; then
   exit 0
 fi
 
+get_uploader() {
+
+	youtube_url="$1"
+
+	# Get video info in JSON format
+	video_info=$(yt-dlp -j "$youtube_url")
+
+	# Extract and print uploader
+	uploader=$(echo "$video_info" | jq -r '.uploader')
+
+	uploader=$(echo "$uploader" | sed -e 's/[ &[:punct:]]/_/g' -e 's/[^[:alnum:]_]//g') 
+
+	if [[ -z "$uploader" ]]; then
+		echo ""	
+	else
+		echo "$uploader"
+	fi
+}
+
+
+# Get uploader
+uploader=$(get_uploader "$1")
+
+
 # Get video info in JSON format
 video_info=$(yt-dlp -j "$1")
 
-# Extract title and clean it
-filename_clean=$(echo "$video_info" | jq -r '.title' | tr -dc '[:alnum:]_. -')
+
+filename_clean=$(echo "$video_info" | jq -r '.title' | sed -e 's/[^[:alnum:]]/_/g')
+filename_clean=$(echo "$video_info" | jq -r '.title' | sed -e 's/[^[:alnum:]]/_/g')
+video_filename="${YTsmall}/${filename_clean}.mp4"
+filename_clean="${Poddle}/${uploader}/${filename_clean}"
+
+if [[ ! -d "${Poddle}/${uploader}" ]]; then
+	mkdir "${Poddle}/${uploader}"
+fi
+
+echo $filename_clean
 
 # Download the video
-yt-dlp -S '+size,+br' -o "$filename_clean.mp4" "$1"
+yt-dlp -S '+size,+br' -o "$video_filename" "$1"
 
 # Probe audio codec
-audio_codec=$(ffprobe -v error -select_streams a:0 -show_entries stream=codec_name -of default=noprint_wrappers=1:nokey=1 "$filename_clean.mp4")
+audio_codec=$(ffprobe -v error -select_streams a:0 -show_entries stream=codec_name -of default=noprint_wrappers=1:nokey=1 "$video_filename")
 
 # Determine audio extension
 case "$audio_codec" in
@@ -33,11 +66,10 @@ case "$audio_codec" in
 esac
 
 # Extract audio
-ffmpeg -i "$filename_clean.mp4" -vn -acodec copy "$Poddle/rumble/$filename_clean.$audio_ext"
+ffmpeg -i "$video_filename" -vn -acodec copy "$filename_clean.$audio_ext"
 
-detox -v "$Poddle/rumble/$filename_clean.$audio_ext"
-# Move video to /tmp
-mv "$Poddle/rumble/$filename_clean.mp4" /tmp -v
 
-echo "Extracted these $filename_clean.mp4 and $filename_clean.$audio_ext and moved the video to /tmp"
+echo "Extracted these $filename_clean.mp4 and $filename_clean.$audio_ext "
+
+detox -v "$filename_clean.$audio_ext"
 
