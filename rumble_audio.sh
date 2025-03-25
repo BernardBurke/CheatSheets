@@ -43,7 +43,7 @@ video_info=$(yt-dlp -j "$1")
 
 filename_clean=$(echo "$video_info" | jq -r '.title' | sed -e 's/[^[:alnum:]]/_/g')
 filename_clean=$(echo "$video_info" | jq -r '.title' | sed -e 's/[^[:alnum:]]/_/g')
-video_filename="${YTsmall}/${filename_clean}.mp4"
+video_filename="${YTsmall}/${uploader}/${filename_clean}.mp4"
 filename_clean="${YTsmall}/${uploader}/${filename_clean}"
 
 if [[ ! -d "${YTsmall}/${uploader}" ]]; then
