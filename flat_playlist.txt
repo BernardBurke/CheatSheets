@@ -1,0 +1,1 @@
+ yt-dlp --skip-download --flat-playlist --dump-json  "https://www.youtube.com/@Joli_ballet"  | jq -cr '{ Date: .upload_date, ID: .id, Title: .title }'
