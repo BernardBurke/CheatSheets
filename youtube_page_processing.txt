@@ -1,0 +1,4 @@
+grep -oP '/watch\?v=[^&]*' your_urls.txt > clean_video_paths.txt
+sed -n 's/^\(.*watch?v=[^&]*\).*/\1/p' your_urls.txt
+
+yt-dlp --skip-download --print "%(webpage_url)s\n# %(title)s" -a clean_urls.txt > url_titles_alt.txt
