@@ -1,0 +1,1 @@
+ffmpeg -loop 1 -i /home/ben/projects/personal/mpv_luapy/default_cover.png -i Downloads/Ego_Dissolves_Relationship_Survives_How.m4a -c:v libx264 -tune stillimage -c:a copy -b:a 192k -pix_fmt yuv420p -shortest output.mp4
