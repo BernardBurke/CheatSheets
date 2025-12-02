@@ -1,0 +1,20 @@
+var channels = document.querySelectorAll('ytd-channel-renderer');
+var opml = '<?xml version="1.0" encoding="UTF-8"?><opml version="1.0"><body>\n';
+
+channels.forEach((channel) => {
+    var title = channel.querySelector('#text').innerText;
+    var url = channel.querySelector('#main-link').href;
+    var channelId = url.split('/channel/')[1];
+    if (channelId) {
+        var rssUrl = 'https://www.youtube.com/feeds/videos.xml?channel_id=' + channelId;
+        opml += `<outline text="${title}" title="${title}" type="rss" xmlUrl="${rssUrl}" />\n`;
+    }
+});
+
+opml += '</body></opml>';
+
+var blob = new Blob([opml], {type: "text/xml"});
+var a = document.createElement("a");
+a.href = URL.createObjectURL(blob);
+a.download = "youtube_subs.opml";
+a.click();
